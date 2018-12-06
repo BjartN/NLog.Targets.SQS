@@ -25,11 +25,8 @@ namespace NLog.Targets.SQS
 
         public int DelaySeconds { get; set; }
 
-        [NLog.Config.RequiredParameter]
         public string AwsAccessKeyId { get; set; }
 
-
-        [NLog.Config.RequiredParameter]
         public string AwsSecretAccessKey { get; set; }
 
 
@@ -73,7 +70,9 @@ namespace NLog.Targets.SQS
         {
             base.InitializeTarget();
             var region = Amazon.RegionEndpoint.GetBySystemName(RegionEndPoint);
-            _client = new Amazon.SQS.AmazonSQSClient(AwsAccessKeyId, AwsSecretAccessKey, region);
+            _client =AwsAccessKeyId == null || AwsSecretAccessKey == null ?
+                new Amazon.SQS.AmazonSQSClient(region) :
+                new Amazon.SQS.AmazonSQSClient(AwsAccessKeyId, AwsSecretAccessKey, region);
         }
 
 
